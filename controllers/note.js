@@ -2,6 +2,18 @@
 
 const Note = require('../models/note');
 
+// module.exports.index = (req, res) => {
+//   res.send('Index');
+// };
+//creates index action
+module.exports.index = (req, res) => {
+  Note.find({}, (err, notes) => {
+    if (err) throw err;
+
+    res.render('notes-index', {notes: notes});
+  });
+//query database with .find - now jade has access to notes object.
+
 module.exports.newNote = (req, res) => {
   res.render('new-note');
 };
