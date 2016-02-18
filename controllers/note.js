@@ -2,6 +2,25 @@
 
 const Note = require('../models/note');
 
+module.exports.edit = (req, res) => {
+  Note.findById(req.params.id, (err, note) => {
+    if (err) throw err;
+
+    res.render('new-note', {note: note});
+  });
+};
+
+module.exports.update = (req, res) => {
+  Note.findByIdAndUpdate(req.params.id,
+    req.body, (err, note) => {
+      if (err) throw err;
+
+      res.redirect(`/notes/${note._id}`);
+    }
+  );
+};
+//create action in controller for edit and update
+
 // module.exports.index = (req, res) => {
 //   res.send('Index');
 // };
