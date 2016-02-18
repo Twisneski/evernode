@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const app = express();
 const port = process.env.PORT || 3000;
+
 const Note = mongoose.model('Notes', mongoose.Schema({
   title: String,
   text: String
@@ -24,15 +25,24 @@ app.get('/', (req, res) => {
 app.get('/notes/new', (req, res) => {
   res.render('new-note');
 });
+
+
+app.get('/notes/:id', (req, res) => {
+  Note.findById(req.params.id, (err, note) => {
+    if (err) throw err;
+
+    res.render('show-note', {note: note});
+  });
+});
 //serves form
 app.post('/notes', (req, res) => {
   Note.create(req.body, (err, note) => {
     if (err) throw err;
-    console.log(note)
-    res.redirect('/');
+
+    res.redirect(`/notes/${note._id}`);
   });
 });
-
+//this is a redirect
 mongoose.connect('mongodb://localhost:27017/evernode', (err) => {
   if (err) throw err;
 
@@ -40,6 +50,7 @@ mongoose.connect('mongodb://localhost:27017/evernode', (err) => {
     console.log(`Evernode server running on port: ${port}`);
   });
 });
+
 //start express then add mongoose. wrap mongoose around listen function
 
 
