@@ -1,20 +1,9 @@
 'use strict';
 
 const Note = require('../models/note');
+const Category = require('../models/category');
 
 module.exports = {
-  edit (req, res) {
-    res.render('new-note', {note: req.note});
-  },
-
-  update (req, res) {
-    req.note.update(req.body, (err) => {
-      if (err) throw err;
-
-      res.redirect(`/notes/${req.note._id}`);
-    });
-  },
-
   index (req, res) {
     Note.find({}, (err, notes) => {
       if (err) throw err;
@@ -23,12 +12,14 @@ module.exports = {
     });
   },
 
-  newNote (req, res) {
-    res.render('new-note');
-  },
+  new (req, res) {
+    Category.find({}, (err, categories) => {
+      if (err) throw err;
 
-  show (req, res) {
-    res.render('show-note', {note: req.note});
+      res.render('new-note', {
+        categories: categories
+      });
+    });
   },
 
   create (req, res) {
@@ -36,6 +27,29 @@ module.exports = {
       if (err) throw err;
 
       res.redirect(`/notes/${note._id}`);
+    });
+  },
+
+  show (req, res) {
+    res.render('show-note', {note: req.note});
+  },
+
+  edit (req, res) {
+    Category.find({}, (err, categories) => {
+      if (err) throw err;
+
+      res.render('new-note', {
+        note: req.note,
+        categories: categories
+      });
+    });
+  },
+
+  update (req, res) {
+    req.note.update(req.body, (err) => {
+      if (err) throw err;
+
+      res.redirect(`/notes/${req.note._id}`);
     });
   },
 
